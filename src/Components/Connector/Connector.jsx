@@ -81,11 +81,6 @@ const Connector = ({ id, status, centralSystemSend, settings, setSettings }) => 
         metaData.currentMeterValue = connectors[id].currentMeterValue
         metaData.stateOfCharge = connectors[id].stateOfCharge
         break;
-      case 'StateOfCharge':
-        metaData.connectorId = connectors[id].connectorId
-        metaData.transactionId = connectors[id].transactionId
-        metaData.stateOfCharge = connectors[id].stateOfCharge
-        break;
       default:
         break;
     }
