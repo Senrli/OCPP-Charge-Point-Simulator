@@ -47,6 +47,9 @@ const MainSettings = () => {
             variant='outlined'
             name='port'
             value={settingsState.mainSettings.port}
+            type='number'
+            inputProps={{ min: 1, max: 65535 }}
+            helperText='Optional'
             onChange={(e) => changeValue(e.target.name, e.target.value)}
           />
         </Grid>

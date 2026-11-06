@@ -11,3 +11,11 @@ export const saveSettings = (settings) => {
 }
 
 export const OCPPDate = (date) => moment.utc(moment(date)).format()
+
+// A blank port deliberately uses the default port for the selected scheme:
+// 80 for ws and 443 for wss.
+export const buildWebSocketUrl = ({ protocol, address, port, chargePointId }) => {
+  const normalizedPort = String(port ?? '').trim()
+  const portSegment = normalizedPort ? `:${normalizedPort}` : ''
+  return `${protocol}://${address}${portSegment}/${chargePointId}`
+}

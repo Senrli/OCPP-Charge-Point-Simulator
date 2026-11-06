@@ -6,6 +6,8 @@ const metaDataType = {
   bootNotification: {},
   RFIDTag: null,
   status: null,
+  errorCode: null,
+  info: null,
   idTag: null,
   meterStart: null,
   meterStop: null,
@@ -39,8 +41,8 @@ export const sendCommand = (command, metaData) => {
       message = {
         connectorId: metaData.connectorId,
         status: metaData.status,
-        errorCode: 'NoError',
-        info: '',
+        errorCode: metaData.errorCode || 'NoError',
+        info: metaData.info || '',
         timestamp: OCPPDate(new Date()),
         vendorId: '',
         vendorErrorCode: ''

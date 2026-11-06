@@ -30,8 +30,7 @@ const ChargePoint = ({ ws, setWs, status, setStatus, centralSystemSend }) => {
 }
   const startConnection = () => {
     const { protocol, address, port, chargePointId, OCPPversion } = settingsState.mainSettings
-    // setWs(new WebSocket(`${protocol}://${address}:${port}/${chargePointId}`, [ OCPPversion ]))
-    socketInfo.webSocket = new WebSocket(`${protocol}://${address}:${port}/${chargePointId}`, [ OCPPversion ])
+    socketInfo.webSocket = new WebSocket(buildWebSocketUrl({ protocol, address, port, chargePointId }), [ OCPPversion ])
     setWs(socketInfo.webSocket)
     setStatus(pointStatus.connecting)
   }
@@ -53,9 +52,12 @@ const ChargePoint = ({ ws, setWs, status, setStatus, centralSystemSend }) => {
   }
 
   return (
-    <Paper sx={{p: 2}}>
+    <Paper sx={{p: { xs: 2, sm: 2.5 }, height: '100%'}}>
       <Box display='flex' alignItems='center' justifyContent='space-between'>
-        <Typography variant='h6' color='primary'>CHARGE POINT</Typography>
+        <Box>
+          <Typography variant='overline' color='text.secondary' sx={{ fontWeight: 800, lineHeight: 1.2 }}>Control center</Typography>
+          <Typography variant='h6' sx={{ fontWeight: 800 }}>Charge point</Typography>
+        </Box>
         <Chip
           size='small'
           icon={<status.icon size={18} style={{ paddingLeft: 6, paddingRight: 3 }} />}
@@ -63,12 +65,12 @@ const ChargePoint = ({ ws, setWs, status, setStatus, centralSystemSend }) => {
           color={status.color}
         />
       </Box>
-      <Divider sx={{ mt: 0.5, mb: 1.5 }} />
+      <Divider sx={{ mt: 1.5, mb: 2 }} />
       <Stack spacing={2}>
         {
           connectedStatuses.includes(status.status)
           ? <Button variant='contained' color='warning' onClick={() => ws.close()} fullWidth>Disconnect</Button>
-          : <Button variant='contained' fullWidth onClick={startConnection}>Connect</Button>
+          : <Button variant='contained' fullWidth onClick={startConnection}>Connect to central system</Button>
         }
         <Button disabled={!connectedStatuses.includes(status.status)} variant='contained' fullWidth onClick={() => sendRequest('Authorize')}>Authorize</Button>
         <Button disabled={!connectedStatuses.includes(status.status)} variant='contained' fullWidth onClick={() => sendRequest('BootNotification')}>Boot notification</Button>
