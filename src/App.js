@@ -36,10 +36,6 @@ function App() {
   const initialSettings = stored
     ? {
         ...stored, // keep mainSettings and other old data
-        simulation: {
-          ...defaultSettings.simulation,
-          ...stored.simulation,
-        },
         stationSettings: mergeStationSettings(
           defaultSettings.stationSettings,
           stored.stationSettings

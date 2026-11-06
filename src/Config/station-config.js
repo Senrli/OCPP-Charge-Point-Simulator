@@ -144,11 +144,6 @@ const stationSettings = {
             key: 'AlwaysReject',
             readonly: false,
             value: "false"
-        },
-        {
-            key: 'ChargerTimeout',
-            readonly: false,
-            value: "false"
         }
     ],
     'unknownKey': []

@@ -89,12 +89,9 @@ const Connector = ({ id, status, centralSystemSend, settings, setSettings }) => 
   }
 
   return (
-    <Paper sx={{ p: { xs: 2, sm: 2.5 }, height: '100%' }}>
+    <Paper sx={{ p: 2 }}>
       <Box display='flex' alignItems='center' justifyContent='space-between'>
-        <Box>
-          <Typography variant='overline' color='text.secondary' sx={{ fontWeight: 800, lineHeight: 1.2 }}>EVSE port</Typography>
-          <Typography variant='h6' sx={{ fontWeight: 800 }}>Connector {id}</Typography>
-        </Box>
+        <Typography variant='h6' color='primary'>CONNECTOR - {id}</Typography>
         {settings.inTransaction && (
           <Tooltip placement='top' title='In Transaction' arrow>
             <img src={animate} style={{ height: 10 }} alt='charge animation' />
@@ -106,9 +103,9 @@ const Connector = ({ id, status, centralSystemSend, settings, setSettings }) => 
           sx={{ backgroundColor: connectorData[settings.status].backgroundColor, color: connectorData[settings.status].color }}
         />
       </Box>
-      <Divider sx={{ mt: 1.5, mb: 2 }} />
+      <Divider sx={{ mt: 0.5, mb: 1.5 }} />
 
-      <Grid container spacing={2}>
+      <Grid container spacing={3}>
         {/* ID Tag */}
         <Grid item xs={6}>
           <TextField fullWidth disabled value={settings.idTag} label='ID Tag' size='small' />
@@ -119,7 +116,7 @@ const Connector = ({ id, status, centralSystemSend, settings, setSettings }) => 
           <Button
             fullWidth
             variant='contained'
-            disabled={settings.inTransaction || settings.status !== connectorStatus.Available || status.status !== mainStatus.authorized}
+            disabled={settings.inTransaction || status.status !== mainStatus.authorized}
             onClick={() => sendRequest('StartTransaction')}
           >
             Start transaction
@@ -146,7 +143,7 @@ const Connector = ({ id, status, centralSystemSend, settings, setSettings }) => 
 
         {/* Stop Transaction */}
         <Grid item xs={6}>
-          <Button fullWidth color='error' variant='contained' disabled={!settings.inTransaction} onClick={() => sendRequest('StopTransaction')}>
+          <Button fullWidth variant='contained' disabled={!settings.inTransaction} onClick={() => sendRequest('StopTransaction')}>
             Stop transaction
           </Button>
         </Grid>

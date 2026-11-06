@@ -6,7 +6,6 @@ import { sendCommand } from '../../OCPP/OCPP-Commands';
 import PropTypes from 'prop-types';
 import { socketInfo } from '../../common/constants';
 import { Switch, FormControlLabel } from '@mui/material'
-import { buildWebSocketUrl } from '../../common/help-functions';
 
 
 const ChargePoint = ({ ws, setWs, status, setStatus, centralSystemSend }) => {
@@ -16,10 +15,6 @@ const ChargePoint = ({ ws, setWs, status, setStatus, centralSystemSend }) => {
   )
 
   const alwaysReject = alwaysRejectSetting?.value === 'true'
-  const chargerTimeoutSetting = settingsState.stationSettings.find(
-    x => x.key === 'ChargerTimeout'
-  )
-  const simulateChargerTimeout = chargerTimeoutSetting?.value === 'true'
 
   const toggleAlwaysReject = () => {
   const updatedSettings = settingsState.stationSettings.map(s =>
@@ -33,29 +28,6 @@ const ChargePoint = ({ ws, setWs, status, setStatus, centralSystemSend }) => {
     stationSettings: updatedSettings
   })
 }
-
-  const toggleChargerTimeout = () => {
-    const updatedSettings = settingsState.stationSettings.map(s =>
-      s.key === 'ChargerTimeout'
-        ? { ...s, value: s.value === 'true' ? 'false' : 'true' }
-        : s
-    )
-
-    setSettingsState({
-      ...settingsState,
-      stationSettings: updatedSettings
-    })
-  }
-
-  const toggleRemoteStopDisconnect = () => {
-    setSettingsState({
-      ...settingsState,
-      simulation: {
-        ...settingsState.simulation,
-        remoteStopDisconnect: !settingsState.simulation.remoteStopDisconnect,
-      },
-    })
-  }
   const startConnection = () => {
     const { protocol, address, port, chargePointId, OCPPversion } = settingsState.mainSettings
     socketInfo.webSocket = new WebSocket(buildWebSocketUrl({ protocol, address, port, chargePointId }), [ OCPPversion ])
@@ -100,19 +72,13 @@ const ChargePoint = ({ ws, setWs, status, setStatus, centralSystemSend }) => {
           ? <Button variant='contained' color='warning' onClick={() => ws.close()} fullWidth>Disconnect</Button>
           : <Button variant='contained' fullWidth onClick={startConnection}>Connect to central system</Button>
         }
-        <Divider textAlign='left' sx={{ color: 'text.secondary', fontSize: 12 }}>Messages</Divider>
-        <Stack direction={{ xs: 'column', sm: 'row', md: 'column' }} spacing={1}>
-          <Button disabled={!connectedStatuses.includes(status.status)} variant='outlined' fullWidth onClick={() => sendRequest('Authorize')}>Authorize</Button>
-          <Button disabled={!connectedStatuses.includes(status.status)} variant='outlined' fullWidth onClick={() => sendRequest('BootNotification')}>Boot notification</Button>
-          <Button disabled={!connectedStatuses.includes(status.status)} variant='outlined' fullWidth onClick={() => sendRequest('Heartbeat')}>Heartbeat</Button>
-        </Stack>
-        <Box sx={{ mt: 0.5, px: 1, py: 0.75, borderRadius: 2, backgroundColor: '#f8fafc' }}>
-          <Stack spacing={0.25}>
-            <FormControlLabel sx={{ m: 0 }} control={<Switch checked={alwaysReject} onChange={toggleAlwaysReject} />} label={<Typography variant='body2'>Always reject requests</Typography>} />
-            <FormControlLabel sx={{ m: 0 }} control={<Switch checked={simulateChargerTimeout} onChange={toggleChargerTimeout} />} label={<Typography variant='body2'>Simulate charger timeout</Typography>} />
-            <FormControlLabel sx={{ m: 0 }} control={<Switch checked={Boolean(settingsState.simulation.remoteStopDisconnect)} onChange={toggleRemoteStopDisconnect} />} label={<Typography variant='body2'>Disconnect after accepted remote stop</Typography>} />
-          </Stack>
-        </Box>
+        <Button disabled={!connectedStatuses.includes(status.status)} variant='contained' fullWidth onClick={() => sendRequest('Authorize')}>Authorize</Button>
+        <Button disabled={!connectedStatuses.includes(status.status)} variant='contained' fullWidth onClick={() => sendRequest('BootNotification')}>Boot notification</Button>
+        <Button disabled={!connectedStatuses.includes(status.status)} variant='contained' fullWidth onClick={() => sendRequest('Heartbeat')}>Heartbeat</Button>
+        <FormControlLabel
+          control={<Switch checked={alwaysReject} onChange={toggleAlwaysReject} />}
+          label="Always Reject"
+        />
       </Stack>
     </Paper>
   )

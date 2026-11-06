@@ -341,7 +341,7 @@ const Main = () => {
       centralSystemSend(statusData.ocppCommand, statusData.lastCommand)
     }
 
-    if (command === 'StartTransaction' && message.idTagInfo?.status !== 'Accepted') {
+    if (command === 'StartTransaction' && message.idTagInfo.status !== 'Accepted') {
       connectors[connector].status = connectorStatus.Available
       updateConnector[connector]({ ...connectors[connector] })
 
@@ -353,9 +353,7 @@ const Main = () => {
     }
 
 
-    if (command === 'StopTransaction' && message.idTagInfo?.status === 'Accepted') {
-      const finalStatus = pendingStopStatus.current[connector] || connectorStatus.Finishing
-      delete pendingStopStatus.current[connector]
+    if (command === 'StopTransaction' && message.idTagInfo.status === 'Accepted') {
       connectors[connector].startMeterValue = 0
       connectors[connector].currentMeterValue = 0
       connectors[connector].transactionId = 0
@@ -395,15 +393,6 @@ const Main = () => {
 
         if (alwaysReject) {
           ws.send(rejectRespond)
-          return
-        }
-
-        const simulateChargerTimeout = settingsState.stationSettings.find(
-          x => x.key === 'ChargerTimeout'
-        )?.value === 'true'
-
-        if (simulateChargerTimeout) {
-          updateLog({ time: getTime(), type: logTypes.info, message: 'Charger timeout simulated; RemoteStartTransaction response suppressed' })
           return
         }
 
